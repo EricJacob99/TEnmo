@@ -1,6 +1,7 @@
 package com.techelevator.tenmo.services;
 
 import com.techelevator.tenmo.model.AuthenticatedUser;
+import com.techelevator.tenmo.model.TransferRequest;
 import com.techelevator.tenmo.model.User;
 import com.techelevator.util.BasicLogger;
 import org.springframework.http.HttpEntity;
@@ -43,15 +44,13 @@ public class UserService {
         return new HttpEntity<>(headers);
     }
 
-    private void TransferRequest() {
+    public void transferRequest(TransferRequest transferRequest) {
         // type, status, user_id_from, user_id_to, amount
-        BigDecimal balance = null;
         try {
-            ResponseEntity<BigDecimal> response = restTemplate.exchange(baseUrl + "balance", HttpMethod.GET, makeAuthEntity(), BigDecimal.class);
-            balance = response.getBody();
+            restTemplate.postForObject(baseUrl + "transfer", transferRequest, TransferRequest.class);
         }catch (RestClientResponseException | ResourceAccessException e) {
             BasicLogger.log(e.getMessage());
         }
-        return balance;
     }
+
 }

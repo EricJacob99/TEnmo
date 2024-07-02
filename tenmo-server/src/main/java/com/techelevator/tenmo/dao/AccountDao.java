@@ -8,4 +8,6 @@ import java.util.List;
 public interface AccountDao {
     BigDecimal getBalance(int id);
     Account updateBalance(Account account);
+
+    Integer getAccountByUserId(int userId);
 }
