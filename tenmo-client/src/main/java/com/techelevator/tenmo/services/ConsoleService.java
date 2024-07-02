@@ -46,6 +46,10 @@ public class ConsoleService {
         System.out.println();
     }
 
+    public void printBigDecimal(BigDecimal bigDecimal) {
+        System.out.print(bigDecimal);
+    }
+
     public UserCredentials promptForCredentials() {
         String username = promptForString("Username: ");
         String password = promptForString("Password: ");
