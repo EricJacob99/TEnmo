@@ -11,6 +11,8 @@ import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 
+import java.math.BigDecimal;
+
 public class UserService {
     private String authToken = null;
     private String baseUrl;
@@ -24,18 +26,16 @@ public class UserService {
         this.authToken = authToken;
     }
 
-//    public BigDecimal getBalance() {
-//        AuthenticatedUser authenticatedUser = null;
-//        authenticatedUser = AuthenticatedUser
-//        BigDecimal balance;
-//        try {
-//            ResponseEntity<BigDecimal> response = restTemplate.exchange(baseUrl + "account/balance", HttpMethod.GET, makeAuthEntity(), BigDecimal.class);
-//            balance = response.getBody();
-//        }catch (RestClientResponseException | ResourceAccessException e) {
-//            BasicLogger.log(e.getMessage());
-//        }
-//        return balance;
-//    }
+    public BigDecimal getBalance() {
+        BigDecimal balance;
+        try {
+            ResponseEntity<BigDecimal> response = restTemplate.exchange(baseUrl + "account/balance", HttpMethod.GET, makeAuthEntity(), BigDecimal.class);
+            balance = response.getBody();
+        }catch (RestClientResponseException | ResourceAccessException e) {
+            BasicLogger.log(e.getMessage());
+        }
+        return balance;
+    }
 
     private HttpEntity<Void> makeAuthEntity() {
         HttpHeaders headers = new HttpHeaders();
