@@ -1,6 +1,4 @@
 package com.techelevator.tenmo.dao;
 
-public class JdbcAccountDao {
-
-
+public class JdbcTransferDao {
 }

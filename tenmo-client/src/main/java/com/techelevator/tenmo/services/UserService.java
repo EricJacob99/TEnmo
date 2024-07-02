@@ -24,12 +24,12 @@ public class UserService {
         this.authToken = authToken;
     }
 
-//    public int getBalance() {
+//    public BigDecimal getBalance() {
 //        AuthenticatedUser authenticatedUser = null;
 //        authenticatedUser = AuthenticatedUser
-//        int balance;
+//        BigDecimal balance;
 //        try {
-//            ResponseEntity<Integer> response = restTemplate.exchange(baseUrl + "account/balance", HttpMethod.GET, makeAuthEntity(), Integer.class);
+//            ResponseEntity<BigDecimal> response = restTemplate.exchange(baseUrl + "account/balance", HttpMethod.GET, makeAuthEntity(), BigDecimal.class);
 //            balance = response.getBody();
 //        }catch (RestClientResponseException | ResourceAccessException e) {
 //            BasicLogger.log(e.getMessage());
