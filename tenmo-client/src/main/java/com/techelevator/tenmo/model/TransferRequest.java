@@ -49,6 +49,8 @@ public class TransferRequest {
         this.amount = amount;
     }
 
+    public TransferRequest(){}
+
     public TransferRequest(int transfer_type_id, int transfer_status_id, int user_id_from, int user_id_to, BigDecimal amount) {
         this.transfer_type_id = transfer_type_id;
         this.transfer_status_id = transfer_status_id;

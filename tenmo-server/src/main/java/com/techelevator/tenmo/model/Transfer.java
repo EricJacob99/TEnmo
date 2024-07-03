@@ -85,11 +85,11 @@ public class Transfer {
     public Transfer() {
     }
 
-    public Transfer(int transfer_type_id, int transfer_status_id, int user_id_from, int user_id_to, BigDecimal amount) {
+    public Transfer(int transfer_type_id, int transfer_status_id, int account_from, int account_to, BigDecimal amount) {
         this.transfer_type_id = transfer_type_id;
         this.transfer_status_id = transfer_status_id;
-        this.account_from = accountDao.getAccountByUserId(userDao.getUserById(user_id_to).getId());
-        this.account_to = accountDao.getAccountByUserId(userDao.getUserById(user_id_to).getId());
+        this.account_from = account_from;
+        this.account_to = account_to;
         this.amount = amount;
     }
 

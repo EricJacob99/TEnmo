@@ -54,10 +54,16 @@ public class UserService {
         return new HttpEntity<>(headers);
     }
 
+    private HttpEntity<TransferRequest> makeTransferEntity(TransferRequest transferRequest) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(authToken);
+        return new HttpEntity<>(transferRequest, headers);
+    }
+
     public void transferRequest(TransferRequest transferRequest) {
         // type, status, user_id_from, user_id_to, amount
         try {
-            restTemplate.postForObject(baseUrl + "transfer", transferRequest, TransferRequest.class);
+            restTemplate.exchange(baseUrl + "transfer", HttpMethod.POST, makeTransferEntity(transferRequest), TransferRequest.class);
         }catch (RestClientResponseException | ResourceAccessException e) {
             BasicLogger.log(e.getMessage());
         }

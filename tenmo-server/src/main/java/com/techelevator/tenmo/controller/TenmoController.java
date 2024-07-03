@@ -32,7 +32,7 @@ public class TenmoController {
     }
 
     @PreAuthorize("isAuthenticated()")
-    @RequestMapping(path = "/balance", method = RequestMethod.POST)
+    @RequestMapping(path = "/balance", method = RequestMethod.PUT)
     public void updateBalance(@RequestBody Principal principal, int id) {
         Transfer newTransfer = getTransferById(id);
         BigDecimal newFromBalance = null;
@@ -67,7 +67,11 @@ public class TenmoController {
     @PreAuthorize("isAuthenticated()")
     @RequestMapping(path = "/transfer", method = RequestMethod.POST)
     public Transfer createTransfer(@RequestBody TransferRequest transferRequest) {
-        Transfer newTransfer = new Transfer(transferRequest.getTransfer_type_id(), transferRequest.getTransfer_status_id(), transferRequest.getUser_id_from(), transferRequest.getUser_id_to(), transferRequest.getAmount());
+        Transfer newTransfer = new Transfer(transferRequest.getTransfer_type_id(),
+                transferRequest.getTransfer_status_id(),
+                accountDao.getAccountByUserId(transferRequest.getUser_id_from()),
+                accountDao.getAccountByUserId(transferRequest.getUser_id_to()),
+                transferRequest.getAmount());
         return transferDao.createTransfer(newTransfer);
     }
 
