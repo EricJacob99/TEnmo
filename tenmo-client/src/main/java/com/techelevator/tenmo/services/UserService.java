@@ -40,9 +40,15 @@ public class UserService {
         return balance;
     }
 
+    private HttpEntity<Integer> makeTransferEntity(int transfer_id) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(authToken);
+        return new HttpEntity<>(transfer_id, headers);
+    }
+
     public void updateBalance(int id) {
         try {
-            restTemplate.exchange(baseUrl + "balance", HttpMethod.PUT, makeAuthEntity(), Void.class);
+            restTemplate.exchange(baseUrl + "balance", HttpMethod.PUT, makeTransferEntity(id), Void.class);
         }catch (RestClientResponseException | ResourceAccessException e) {
             BasicLogger.log(e.getMessage());
         }
@@ -60,13 +66,15 @@ public class UserService {
         return new HttpEntity<>(transferRequest, headers);
     }
 
-    public void transferRequest(TransferRequest transferRequest) {
-        // type, status, user_id_from, user_id_to, amount
+    public Integer transferRequest(TransferRequest transferRequest) {
+        Integer transfer_id = null;
         try {
-            restTemplate.exchange(baseUrl + "transfer", HttpMethod.POST, makeTransferEntity(transferRequest), TransferRequest.class);
+            ResponseEntity<Integer> response = restTemplate.exchange(baseUrl + "transfer", HttpMethod.POST, makeTransferEntity(transferRequest), Integer.class);
+            transfer_id = response.getBody();
         }catch (RestClientResponseException | ResourceAccessException e) {
             BasicLogger.log(e.getMessage());
         }
+        return transfer_id;
     }
 
     public List<UsernameAndId> listUsers() {

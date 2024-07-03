@@ -118,10 +118,14 @@ public class App {
         }
         consoleService.printUserList(users);
         int user_id_to =  consoleService.promptForInt("Enter ID of user you are sending to (0 to cancel): ");
-        if (user_id_to != 0) {
+        if (user_id_to != 0 && user_id_to != currentUser.getUser().getId()) {
             BigDecimal amount = consoleService.promptForBigDecimal("Enter amount of TE Bucks to send: ");
-            TransferRequest newTransferRequest = new TransferRequest(1, 1, currentUser.getUser().getId(), user_id_to, amount);
-            userService.transferRequest(newTransferRequest);
+            if (amount.compareTo(userService.getBalance()) < 1) {
+                TransferRequest newTransferRequest = new TransferRequest(1, 1, currentUser.getUser().getId(), user_id_to, amount);
+                Integer newTransferId = null;
+                newTransferId = userService.transferRequest(newTransferRequest);
+                userService.updateBalance(newTransferId);
+            }
         }
 	}
 
