@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -33,7 +34,7 @@ public class TenmoController {
     @RequestMapping(path = "/users", method = RequestMethod.GET)
     public List<UsernameAndId> getUsers() {
         List<User> userList = userDao.getUsers();
-        List<UsernameAndId> users = null;
+        List<UsernameAndId> users = new ArrayList<>();
         for (User user: userList) {
             UsernameAndId usernameAndId = new UsernameAndId(user.getUsername(), user.getId());
             users.add(usernameAndId);

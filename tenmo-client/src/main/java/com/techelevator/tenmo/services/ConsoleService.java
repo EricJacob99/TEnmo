@@ -54,8 +54,8 @@ public class ConsoleService {
     }
 
     public void printUserList(List<UsernameAndId> users) {
-        for (UsernameAndId user: users) {
-            System.out.print(user.getId() + " " + user.getUsername());
+        for(int i = 0; i < users.size(); i++){
+            System.out.println(users.get(i).getId() + " " + users.get(i).getUsername());
         }
     }
 

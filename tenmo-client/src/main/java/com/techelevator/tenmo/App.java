@@ -9,6 +9,7 @@ import com.techelevator.tenmo.services.ConsoleService;
 import com.techelevator.tenmo.services.UserService;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 public class App {
@@ -110,22 +111,35 @@ public class App {
 
 	private void sendBucks() {
         List<UsernameAndId> users = userService.listUsers();
-        UsernameAndId nowUsing = new UsernameAndId(currentUser.getUser().getUsername(),currentUser.getUser().getId());
-        if (users.contains(nowUsing)) {
-            users.remove(nowUsing);
-        }
+//        UsernameAndId nowUsing = new UsernameAndId(currentUser.getUser().getUsername(),currentUser.getUser().getId());
+//        for(int i = 0; i < users.size(); i++){
+//            if (users.get(i).equals(nowUsing)) {
+//                users.remove(users.get(users.indexOf(nowUsing)));
+//            }
+//        }
         consoleService.printUserList(users);
-       int user_id_to =  consoleService.promptForInt("Enter ID of user you are sending to (0 to cancel): ");
-       if (user_id_to != 0) {
-           BigDecimal amount = consoleService.promptForBigDecimal("Enter amount of TE Bucks to send: ");
-           TransferRequest newTransferRequest = new TransferRequest(1, 1, currentUser.getUser().getId(), user_id_to, amount);
-           userService.transferRequest(newTransferRequest);
-       }
+        int user_id_to =  consoleService.promptForInt("Enter ID of user you are sending to (0 to cancel): ");
+        if (user_id_to != 0) {
+            BigDecimal amount = consoleService.promptForBigDecimal("Enter amount of TE Bucks to send: ");
+            TransferRequest newTransferRequest = new TransferRequest(1, 1, currentUser.getUser().getId(), user_id_to, amount);
+            userService.transferRequest(newTransferRequest);
+        }
 	}
 
 	private void requestBucks() {
-		// TODO Auto-generated method stub
-		
+        List<UsernameAndId> users = userService.listUsers();
+//        UsernameAndId nowUsing = new UsernameAndId(currentUser.getUser().getUsername(),currentUser.getUser().getId());
+//        for(int i = 0; i < users.size(); i++){
+//            if (users.get(i).equals(nowUsing)) {
+//                users.remove(users.get(users.indexOf(nowUsing)));
+//            }
+//        }
+        consoleService.printUserList(users);
+        int user_id_from =  consoleService.promptForInt("Enter ID of user you are requesting from (0 to cancel): ");
+        if (user_id_from != 0) {
+            BigDecimal amount = consoleService.promptForBigDecimal("Enter amount of TE Bucks to request: ");
+            TransferRequest newTransferRequest = new TransferRequest(0, 0, user_id_from, currentUser.getUser().getId(), amount);
+            userService.transferRequest(newTransferRequest);
+        }
 	}
-
 }

@@ -19,9 +19,4 @@ public class UsernameAndId {
     public void setId(int id) {
         this.id = id;
     }
-
-    public UsernameAndId(String username, int id) {
-        this.username = username;
-        this.id = id;
-    }
 }

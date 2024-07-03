@@ -12,6 +12,7 @@ import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserService {
@@ -54,9 +55,12 @@ public class UserService {
     }
 
     public List<UsernameAndId> listUsers() {
-        List<UsernameAndId> usernameAndIdList = null;
+        List<UsernameAndId> usernameAndIdList = new ArrayList<>();
+        UsernameAndId[] tempArray = null;
         try {
-            usernameAndIdList = restTemplate.getForObject(baseUrl + "users", List.class);
+            ResponseEntity<UsernameAndId[]> response  = restTemplate.exchange(baseUrl + "users", HttpMethod.GET, makeAuthEntity(), UsernameAndId[].class);
+            tempArray = response.getBody();
+            usernameAndIdList.addAll(List.of(tempArray));
         }catch (RestClientResponseException | ResourceAccessException e) {
             BasicLogger.log(e.getMessage());
         }
