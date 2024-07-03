@@ -111,12 +111,11 @@ public class App {
 
 	private void sendBucks() {
         List<UsernameAndId> users = userService.listUsers();
-//        UsernameAndId nowUsing = new UsernameAndId(currentUser.getUser().getUsername(),currentUser.getUser().getId());
-//        for(int i = 0; i < users.size(); i++){
-//            if (users.get(i).equals(nowUsing)) {
-//                users.remove(users.get(users.indexOf(nowUsing)));
-//            }
-//        }
+        for(int i = 0; i < users.size(); i++){
+            if (users.get(i).getId() == currentUser.getUser().getId()) {
+                users.remove(i);
+            }
+        }
         consoleService.printUserList(users);
         int user_id_to =  consoleService.promptForInt("Enter ID of user you are sending to (0 to cancel): ");
         if (user_id_to != 0) {
@@ -128,12 +127,11 @@ public class App {
 
 	private void requestBucks() {
         List<UsernameAndId> users = userService.listUsers();
-//        UsernameAndId nowUsing = new UsernameAndId(currentUser.getUser().getUsername(),currentUser.getUser().getId());
-//        for(int i = 0; i < users.size(); i++){
-//            if (users.get(i).equals(nowUsing)) {
-//                users.remove(users.get(users.indexOf(nowUsing)));
-//            }
-//        }
+        for(int i = 0; i < users.size(); i++){
+            if (users.get(i).getId() == currentUser.getUser().getId()) {
+                users.remove(i);
+            }
+        }
         consoleService.printUserList(users);
         int user_id_from =  consoleService.promptForInt("Enter ID of user you are requesting from (0 to cancel): ");
         if (user_id_from != 0) {

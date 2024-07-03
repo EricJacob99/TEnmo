@@ -19,4 +19,7 @@ public class UsernameAndId {
     public void setId(int id) {
         this.id = id;
     }
+
+    public UsernameAndId() {
+    }
 }
