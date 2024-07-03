@@ -31,6 +31,28 @@ public class TenmoController {
         return balance;
     }
 
+    @PreAuthorize("isAuthenticated()")
+    @RequestMapping(path = "/balance", method = RequestMethod.POST)
+    public void updateBalance(@RequestBody Principal principal, int id) {
+        Transfer newTransfer = getTransferById(id);
+        BigDecimal newFromBalance = null;
+        BigDecimal newToBalance = null;
+        BigDecimal nonUserBalance = null;
+        BigDecimal userBalance = accountDao.getBalance(userDao.getUserByUsername(principal.getName()).getId());
+        BigDecimal amount = newTransfer.getAmount();
+        if (newTransfer.getTransfer_type_id() == 1) {
+            nonUserBalance = accountDao.getBalance(accountDao.getUserByAccountId(newTransfer.getAccount_to()));
+            newFromBalance = userBalance.subtract(amount);
+            newToBalance = nonUserBalance.add(amount);
+        } else if (newTransfer.getTransfer_type_id() == 0) {
+            nonUserBalance = accountDao.getBalance(accountDao.getUserByAccountId(newTransfer.getAccount_from()));
+            newFromBalance = nonUserBalance.subtract(amount);
+            newToBalance = userBalance.add(amount);
+        }
+        accountDao.updateBalance(newFromBalance, newTransfer.getAccount_from());
+        accountDao.updateBalance(newToBalance, newTransfer.getAccount_to());
+    }
+
     @RequestMapping(path = "/users", method = RequestMethod.GET)
     public List<UsernameAndId> getUsers() {
         List<User> userList = userDao.getUsers();
@@ -41,6 +63,7 @@ public class TenmoController {
         }
         return users;
     }
+
     @PreAuthorize("isAuthenticated()")
     @RequestMapping(path = "/transfer", method = RequestMethod.POST)
     public Transfer createTransfer(@RequestBody TransferRequest transferRequest) {

@@ -1,5 +1,6 @@
 package com.techelevator.tenmo.services;
 
+import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.TransferRequest;
 import com.techelevator.tenmo.model.UsernameAndId;
 import com.techelevator.util.BasicLogger;
@@ -37,6 +38,14 @@ public class UserService {
             BasicLogger.log(e.getMessage());
         }
         return balance;
+    }
+
+    public void updateBalance(int id) {
+        try {
+            restTemplate.exchange(baseUrl + "balance", HttpMethod.PUT, makeAuthEntity(), Void.class);
+        }catch (RestClientResponseException | ResourceAccessException e) {
+            BasicLogger.log(e.getMessage());
+        }
     }
 
     private HttpEntity<Void> makeAuthEntity() {
