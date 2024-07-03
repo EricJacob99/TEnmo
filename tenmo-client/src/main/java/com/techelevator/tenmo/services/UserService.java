@@ -1,8 +1,7 @@
 package com.techelevator.tenmo.services;
 
-import com.techelevator.tenmo.model.AuthenticatedUser;
 import com.techelevator.tenmo.model.TransferRequest;
-import com.techelevator.tenmo.model.User;
+import com.techelevator.tenmo.model.UsernameAndId;
 import com.techelevator.util.BasicLogger;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -13,6 +12,7 @@ import org.springframework.web.client.RestClientResponseException;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 public class UserService {
     private String authToken = null;
@@ -53,4 +53,13 @@ public class UserService {
         }
     }
 
+    public List<UsernameAndId> listUsers() {
+        List<UsernameAndId> usernameAndIdList = null;
+        try {
+            usernameAndIdList = restTemplate.getForObject(baseUrl + "users", List.class);
+        }catch (RestClientResponseException | ResourceAccessException e) {
+            BasicLogger.log(e.getMessage());
+        }
+        return usernameAndIdList;
+    }
 }

@@ -3,8 +3,7 @@ package com.techelevator.tenmo.controller;
 import com.techelevator.tenmo.dao.AccountDao;
 import com.techelevator.tenmo.dao.TransferDao;
 import com.techelevator.tenmo.dao.UserDao;
-import com.techelevator.tenmo.model.Account;
-import com.techelevator.tenmo.model.Transfer;
+import com.techelevator.tenmo.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -30,16 +29,21 @@ public class TenmoController {
         balance = accountDao.getBalance(userDao.getUserByUsername(principal.getName()).getId());
         return balance;
     }
-    @PreAuthorize("isAuthenticated()")
-    @RequestMapping(path = "/transfer", method = RequestMethod.POST)
-    public Transfer createSendTransfer(@RequestBody int transfer_type_id, int transfer_status_id, Principal principal, int user_id_to, BigDecimal amount) {
-        Transfer newTransfer = new Transfer(transfer_type_id, transfer_status_id, accountDao.getAccountByUserId(userDao.getUserByUsername(principal.getName()).getId()),accountDao.getAccountByUserId(userDao.getUserById(user_id_to).getId()), amount);
-        return transferDao.createTransfer(newTransfer);
+
+    @RequestMapping(path = "/users", method = RequestMethod.GET)
+    public List<UsernameAndId> getUsers() {
+        List<User> userList = userDao.getUsers();
+        List<UsernameAndId> users = null;
+        for (User user: userList) {
+            UsernameAndId usernameAndId = new UsernameAndId(user.getUsername(), user.getId());
+            users.add(usernameAndId);
+        }
+        return users;
     }
     @PreAuthorize("isAuthenticated()")
     @RequestMapping(path = "/transfer", method = RequestMethod.POST)
-    public Transfer createRequestTransfer(@RequestBody int transfer_type_id, int transfer_status_id, int user_id_from, Principal principal, BigDecimal amount) {
-        Transfer newTransfer = new Transfer(transfer_type_id, transfer_status_id, accountDao.getAccountByUserId(userDao.getUserById(user_id_from).getId()), accountDao.getAccountByUserId(userDao.getUserByUsername(principal.getName()).getId()), amount);
+    public Transfer createTransfer(@RequestBody TransferRequest transferRequest) {
+        Transfer newTransfer = new Transfer(transferRequest.getTransfer_type_id(), transferRequest.getTransfer_status_id(), transferRequest.getUser_id_from(), transferRequest.getUser_id_to(), transferRequest.getAmount());
         return transferDao.createTransfer(newTransfer);
     }
 

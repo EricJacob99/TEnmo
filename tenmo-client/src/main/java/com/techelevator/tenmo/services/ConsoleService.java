@@ -1,9 +1,12 @@
 package com.techelevator.tenmo.services;
 
 
+import com.techelevator.tenmo.model.User;
 import com.techelevator.tenmo.model.UserCredentials;
+import com.techelevator.tenmo.model.UsernameAndId;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Scanner;
 
 public class ConsoleService {
@@ -48,6 +51,12 @@ public class ConsoleService {
 
     public void printBigDecimal(BigDecimal bigDecimal) {
         System.out.print(bigDecimal);
+    }
+
+    public void printUserList(List<UsernameAndId> users) {
+        for (UsernameAndId user: users) {
+            System.out.print(user.getId() + " " + user.getUsername());
+        }
     }
 
     public UserCredentials promptForCredentials() {
