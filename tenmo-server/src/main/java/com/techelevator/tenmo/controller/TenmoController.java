@@ -33,7 +33,7 @@ public class TenmoController {
 
     @PreAuthorize("isAuthenticated()")
     @RequestMapping(path = "/balance", method = RequestMethod.PUT)
-    public void updateBalance(@RequestBody Principal principal, int id) {
+    public void updateBalance(@RequestBody Principal principal, Integer id) {
         Transfer newTransfer = getTransferById(id);
         BigDecimal newFromBalance = null;
         BigDecimal newToBalance = null;
