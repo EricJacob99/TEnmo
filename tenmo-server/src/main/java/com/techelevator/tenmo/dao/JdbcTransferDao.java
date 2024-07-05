@@ -68,6 +68,8 @@ public class JdbcTransferDao implements TransferDao{
             throw new DaoException("Unable to connect to server or database", e);
         } catch (DataIntegrityViolationException e) {
             throw new DaoException("Data integrity violation", e);
+        }catch(NullPointerException e){
+            throw new RuntimeException("Null Pointer Exception", e);
         }
         return newTransfer;
     }

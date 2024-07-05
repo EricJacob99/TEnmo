@@ -1,6 +1,7 @@
 package com.techelevator.tenmo.services;
 
-import com.techelevator.tenmo.model.Transfer;
+
+import com.fasterxml.jackson.databind.deser.std.NumberDeserializers;
 import com.techelevator.tenmo.model.TransferRequest;
 import com.techelevator.tenmo.model.UsernameAndId;
 import com.techelevator.util.BasicLogger;
@@ -40,7 +41,7 @@ public class UserService {
         return balance;
     }
 
-    private HttpEntity<Integer> makeTransferEntity(int transfer_id) {
+    private HttpEntity<Integer> makeIdTransferEntity(Integer transfer_id) {
         HttpHeaders headers = new HttpHeaders();
         headers.setBearerAuth(authToken);
         return new HttpEntity<>(transfer_id, headers);
@@ -48,7 +49,7 @@ public class UserService {
 
     public void updateBalance(int id) {
         try {
-            restTemplate.exchange(baseUrl + "balance", HttpMethod.PUT, makeTransferEntity(id), Void.class);
+            restTemplate.exchange(baseUrl + "balance", HttpMethod.PUT, makeIdTransferEntity(id), Void.class);
         }catch (RestClientResponseException | ResourceAccessException e) {
             BasicLogger.log(e.getMessage());
         }
