@@ -50,7 +50,10 @@ public class UserService {
     public void updateBalance(int id) {
         try {
             restTemplate.exchange(baseUrl + "balance", HttpMethod.PUT, makeIdTransferEntity(id), Void.class);
-        }catch (RestClientResponseException | ResourceAccessException e) {
+        } catch (RestClientResponseException e) {
+            BasicLogger.log(e.getMessage());
+            System.out.println(e.getResponseBodyAsString());
+        } catch (ResourceAccessException e) {
             BasicLogger.log(e.getMessage());
         }
     }

@@ -3,10 +3,13 @@ package com.techelevator.tenmo.controller;
 import com.techelevator.tenmo.dao.AccountDao;
 import com.techelevator.tenmo.dao.TransferDao;
 import com.techelevator.tenmo.dao.UserDao;
+import com.techelevator.tenmo.exception.DaoException;
 import com.techelevator.tenmo.model.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.security.Principal;
@@ -23,7 +26,6 @@ public class TenmoController {
     @Autowired
     private TransferDao transferDao;
 
-    @PreAuthorize("isAuthenticated()")
     @RequestMapping(path = "/balance", method = RequestMethod.GET)
     public BigDecimal getBalance(Principal principal) {
         BigDecimal balance = null;
@@ -31,20 +33,22 @@ public class TenmoController {
         return balance;
     }
 
-    @PreAuthorize("isAuthenticated()")
     @RequestMapping(path = "/balance", method = RequestMethod.PUT)
     public void updateBalance(@RequestBody int id) {
-        int accountFrom = getTransferById(id).getAccount_from();
-        int accountTo = getTransferById(id).getAccount_to();
+        int accountFrom = transferDao.getTransferById(id).getAccount_from();
+        int accountTo = transferDao.getTransferById(id).getAccount_to();
         BigDecimal accountFromBalance = accountDao.getBalance(accountFrom);
         BigDecimal accountToBalance = accountDao.getBalance(accountTo);
-        BigDecimal newFromBalance = null;
-        BigDecimal newToBalance = null;
         BigDecimal amount = getTransferById(id).getAmount();
-        newFromBalance = accountFromBalance.subtract(amount);
-        newToBalance = accountToBalance.add(amount);
-        accountDao.updateBalance(newFromBalance, (getTransferById(id).getAccount_from()));
-        accountDao.updateBalance(newToBalance, (getTransferById(id).getAccount_to()));
+
+        BigDecimal newFromBalance = accountFromBalance.subtract(amount);
+        BigDecimal newToBalance = accountToBalance.add(amount);
+        try {
+            accountDao.updateBalance(newFromBalance, accountFrom);
+            accountDao.updateBalance(newToBalance, accountTo);
+        } catch (DaoException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @RequestMapping(path = "/users", method = RequestMethod.GET)
@@ -58,7 +62,6 @@ public class TenmoController {
         return users;
     }
 
-    @PreAuthorize("isAuthenticated()")
     @RequestMapping(path = "/transfer", method = RequestMethod.POST)
     public Integer createTransfer(@RequestBody TransferRequest transferRequest) {
         Transfer newTransfer = new Transfer(transferRequest.getTransfer_type_id(),

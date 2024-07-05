@@ -121,7 +121,7 @@ public class App {
         if (user_id_to != 0 && user_id_to != currentUser.getUser().getId()) {
             BigDecimal amount = consoleService.promptForBigDecimal("Enter amount of TE Bucks to send: ");
             if (amount.compareTo(userService.getBalance()) < 1) {
-                TransferRequest newTransferRequest = new TransferRequest(1, 1, currentUser.getUser().getId(), user_id_to, amount);
+                TransferRequest newTransferRequest = new TransferRequest(2, 2, currentUser.getUser().getId(), user_id_to, amount);
                 Integer newTransferId = null;
                 newTransferId = userService.transferRequest(newTransferRequest);
                 userService.updateBalance(newTransferId);
@@ -140,7 +140,7 @@ public class App {
         int user_id_from =  consoleService.promptForInt("Enter ID of user you are requesting from (0 to cancel): ");
         if (user_id_from != 0) {
             BigDecimal amount = consoleService.promptForBigDecimal("Enter amount of TE Bucks to request: ");
-            TransferRequest newTransferRequest = new TransferRequest(0, 0, user_id_from, currentUser.getUser().getId(), amount);
+            TransferRequest newTransferRequest = new TransferRequest(1, 1, user_id_from, currentUser.getUser().getId(), amount);
             userService.transferRequest(newTransferRequest);
         }
 	}
