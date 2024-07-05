@@ -31,26 +31,19 @@ public class TenmoController {
         return balance;
     }
 
-    @PreAuthorize("isAuthenticated()")
     @RequestMapping(path = "/balance", method = RequestMethod.PUT)
-    public void updateBalance(@RequestBody Principal principal, int id) {
-        Transfer newTransfer = getTransferById(id);
+    public void updateBalance(@RequestBody int id) {
+        int accountFrom = getTransferById(id).getAccount_from();
+        int accountTo = getTransferById(id).getAccount_to();
+        BigDecimal accountFromBalance = accountDao.getBalance(accountFrom);
+        BigDecimal accountToBalance = accountDao.getBalance(accountTo);
         BigDecimal newFromBalance = null;
         BigDecimal newToBalance = null;
-        BigDecimal nonUserBalance = null;
-        BigDecimal userBalance = accountDao.getBalance(userDao.getUserByUsername(principal.getName()).getId());
-        BigDecimal amount = newTransfer.getAmount();
-        if (newTransfer.getTransfer_type_id() == 1) {
-            nonUserBalance = accountDao.getBalance(accountDao.getUserByAccountId(newTransfer.getAccount_to()));
-            newFromBalance = userBalance.subtract(amount);
-            newToBalance = nonUserBalance.add(amount);
-        } else if (newTransfer.getTransfer_type_id() == 0) {
-            nonUserBalance = accountDao.getBalance(accountDao.getUserByAccountId(newTransfer.getAccount_from()));
-            newFromBalance = nonUserBalance.subtract(amount);
-            newToBalance = userBalance.add(amount);
-        }
-        accountDao.updateBalance(newFromBalance, newTransfer.getAccount_from());
-        accountDao.updateBalance(newToBalance, newTransfer.getAccount_to());
+        BigDecimal amount = getTransferById(id).getAmount();
+        newFromBalance = accountFromBalance.subtract(amount);
+        newToBalance = accountToBalance.add(amount);
+        accountDao.updateBalance(newFromBalance, (getTransferById(id).getAccount_from()));
+        accountDao.updateBalance(newToBalance, (getTransferById(id).getAccount_to()));
     }
 
     @RequestMapping(path = "/users", method = RequestMethod.GET)
@@ -66,13 +59,15 @@ public class TenmoController {
 
     @PreAuthorize("isAuthenticated()")
     @RequestMapping(path = "/transfer", method = RequestMethod.POST)
-    public Transfer createTransfer(@RequestBody TransferRequest transferRequest) {
+    public Integer createTransfer(@RequestBody TransferRequest transferRequest) {
         Transfer newTransfer = new Transfer(transferRequest.getTransfer_type_id(),
                 transferRequest.getTransfer_status_id(),
                 accountDao.getAccountByUserId(transferRequest.getUser_id_from()),
                 accountDao.getAccountByUserId(transferRequest.getUser_id_to()),
                 transferRequest.getAmount());
-        return transferDao.createTransfer(newTransfer);
+
+                transferDao.createTransfer(newTransfer);
+                return newTransfer.getTransfer_id();
     }
 
     @RequestMapping(path = "/transfer", method = RequestMethod.PUT)

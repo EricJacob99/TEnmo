@@ -18,7 +18,6 @@ public class JdbcAccountDao implements AccountDao {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-
     @Override
     public BigDecimal getBalance(int id) {
         BigDecimal balance = null;
