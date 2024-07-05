@@ -31,6 +31,7 @@ public class TenmoController {
         return balance;
     }
 
+    @PreAuthorize("isAuthenticated()")
     @RequestMapping(path = "/balance", method = RequestMethod.PUT)
     public void updateBalance(@RequestBody int id) {
         int accountFrom = getTransferById(id).getAccount_from();
