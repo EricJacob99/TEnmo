@@ -93,6 +93,7 @@ public class Transfer {
         this.amount = amount;
     }
 
+    //we are not using this, we may need to delete later on
     public Transfer(int transfer_id, int transfer_type_id, int transfer_status_id, int account_from, int account_to, BigDecimal amount) {
         this.transfer_id = transfer_id;
         this.transfer_type_id = transfer_type_id;

@@ -73,7 +73,8 @@ public class UserService {
     public Integer transferRequest(TransferRequest transferRequest) {
         Integer transfer_id = null;
         try {
-            ResponseEntity<Integer> response = restTemplate.exchange(baseUrl + "transfer", HttpMethod.POST, makeTransferEntity(transferRequest), Integer.class);
+            HttpEntity<TransferRequest> test = makeTransferEntity(transferRequest);
+            ResponseEntity<Integer> response = restTemplate.exchange(baseUrl + "transfer", HttpMethod.POST, test, Integer.class);
             transfer_id = response.getBody();
         }catch (RestClientResponseException | ResourceAccessException e) {
             BasicLogger.log(e.getMessage());

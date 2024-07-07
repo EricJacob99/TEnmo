@@ -29,16 +29,18 @@ public class TenmoController {
     @RequestMapping(path = "/balance", method = RequestMethod.GET)
     public BigDecimal getBalance(Principal principal) {
         BigDecimal balance = null;
-        balance = accountDao.getBalance(userDao.getUserByUsername(principal.getName()).getId());
+        balance = accountDao.getBalanceByUserId(userDao.getUserByUsername(principal.getName()).getId());
         return balance;
     }
 
     @RequestMapping(path = "/balance", method = RequestMethod.PUT)
     public void updateBalance(@RequestBody int id) {
-        int accountFrom = transferDao.getTransferById(id).getAccount_from();
-        int accountTo = transferDao.getTransferById(id).getAccount_to();
-        BigDecimal accountFromBalance = accountDao.getBalance(accountFrom);
-        BigDecimal accountToBalance = accountDao.getBalance(accountTo);
+        Transfer transfer = transferDao.getTransferById(id);
+        int accountFrom = transfer.getAccount_from();
+        int accountTo = transfer.getAccount_to();
+        BigDecimal accountFromBalance = accountDao.getBalanceByAccountId(accountFrom);
+        BigDecimal accountToBalance = accountDao.getBalanceByAccountId(accountTo);
+        // we were getting balance by user Id but we were passing Account Id
         BigDecimal amount = getTransferById(id).getAmount();
 
         BigDecimal newFromBalance = accountFromBalance.subtract(amount);
@@ -63,14 +65,15 @@ public class TenmoController {
     }
 
     @RequestMapping(path = "/transfer", method = RequestMethod.POST)
-    public Integer createTransfer(@RequestBody TransferRequest transferRequest) {
+    public int createTransfer(@RequestBody TransferRequest transferRequest) {
         Transfer newTransfer = new Transfer(transferRequest.getTransfer_type_id(),
                 transferRequest.getTransfer_status_id(),
                 accountDao.getAccountByUserId(transferRequest.getUser_id_from()),
                 accountDao.getAccountByUserId(transferRequest.getUser_id_to()),
                 transferRequest.getAmount());
 
-                transferDao.createTransfer(newTransfer);
+                newTransfer= transferDao.createTransfer(newTransfer);
+                //added the left side, transferDao was creating a new transfer but it was not setting it to new transfer variable we declared
                 return newTransfer.getTransfer_id();
     }
 

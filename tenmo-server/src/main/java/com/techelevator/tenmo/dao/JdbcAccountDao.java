@@ -19,7 +19,22 @@ public class JdbcAccountDao implements AccountDao {
     }
 
     @Override
-    public BigDecimal getBalance(int id) {
+    public BigDecimal getBalanceByAccountId(int id) {
+        BigDecimal balance = null;
+        String sql = "SELECT balance FROM account WHERE account_id = ?";
+        try {
+            SqlRowSet results = jdbcTemplate.queryForRowSet(sql, id);
+            if (results.next()) {
+                balance = mapRowToBalance(results);
+            }
+        } catch (CannotGetJdbcConnectionException e) {
+            throw new DaoException("Unable to connect to server or database", e);
+        }
+        return balance;
+
+    } // added this because it was throwing an error when we created a transfer
+
+    public BigDecimal getBalanceByUserId(int id) {
         BigDecimal balance = null;
         String sql = "SELECT balance FROM account WHERE user_id = ?";
         try {
