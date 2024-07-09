@@ -1,10 +1,7 @@
 package com.techelevator.tenmo.services;
 
 
-import com.techelevator.tenmo.model.AuthenticatedUser;
-import com.techelevator.tenmo.model.User;
-import com.techelevator.tenmo.model.UserCredentials;
-import com.techelevator.tenmo.model.UsernameAndId;
+import com.techelevator.tenmo.model.*;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -13,6 +10,12 @@ import java.util.Scanner;
 public class ConsoleService {
 
     private final Scanner scanner = new Scanner(System.in);
+
+    private AuthenticatedUser currentUser;
+
+    public ConsoleService(AuthenticatedUser currentUser) {
+        this.currentUser = currentUser;
+    }
 
     public int promptForMenuSelection(String prompt) {
         int menuSelection;
@@ -59,6 +62,12 @@ public class ConsoleService {
             System.out.println(users.get(i).getId() + " " + users.get(i).getUsername());
         }
     }
+//    public void printTransferHistory(List<Transfer> transfers) {
+//        for(int i = 0; i < transfers.size(); i++){
+//            if (transfers.get(i).getAccount_to() == currentUser.getUser().g)
+//            System.out.println(transfers.get(i).getTransfer_id() + " From: " + transfers.get(i).getAccount_from());
+//        }
+//    }
 
     public UserCredentials promptForCredentials() {
         String username = promptForString("Username: ");

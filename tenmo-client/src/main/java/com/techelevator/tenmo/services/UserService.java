@@ -2,6 +2,7 @@ package com.techelevator.tenmo.services;
 
 
 import com.fasterxml.jackson.databind.deser.std.NumberDeserializers;
+import com.techelevator.tenmo.model.Transfer;
 import com.techelevator.tenmo.model.TransferRequest;
 import com.techelevator.tenmo.model.UsernameAndId;
 import com.techelevator.util.BasicLogger;
@@ -94,4 +95,26 @@ public class UserService {
         }
         return usernameAndIdList;
     }
+
+//    public List<Transfer> listTransfers() {
+//        List<Transfer> transferHistory = new ArrayList<>();
+//        try {
+//            ResponseEntity<Transfer> response  = restTemplate.exchange(baseUrl + "transfer", HttpMethod.GET, makeAuthEntity(), Transfer.class);
+//            transferHistory.add(response.getBody());
+//        }catch (RestClientResponseException | ResourceAccessException e) {
+//            BasicLogger.log(e.getMessage());
+//        }
+//        return transferHistory;
+//    }
+
+//    public List<Transfer> listPendingTransfers() {
+//        List<Transfer> pendingTransfers = new ArrayList<>();
+//        try {
+//            ResponseEntity<Transfer> response  = restTemplate.exchange(baseUrl + "users", HttpMethod.GET, makeAuthEntity(), Transfer.class);
+//            pendingTransfers.add(response.getBody());
+//        }catch (RestClientResponseException | ResourceAccessException e) {
+//            BasicLogger.log(e.getMessage());
+//        }
+//        return pendingTransfers;
+//    }
 }
